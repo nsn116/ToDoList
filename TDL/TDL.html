@@ -13,60 +13,81 @@
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
-<body>
+<body style="height: 100vh; background-image: url('background.jpg');">
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Notes</a>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Notes</a>
+            </div>
+            <p class="navbar-text navbar-right" style="padding-right: 5vh">Inspired By Google Keep</p>
         </div>
-        <p class="navbar-text navbar-right" style="padding-right: 5vh">Inspired By Google Keep</p>
-    </div>
-</nav>
+    </nav>
 
-<div class="container-fluid" style="text-align: center">
-    <div class="btn-group">
-        <button type="button" class="btn btn-warning btn-lg" disabled>
-            Add Note
-            <span class="glyphicon glyphicon-file" style="margin-left: 0.4em"></span>
-        </button>
-        <button type="button" class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#textBox">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-    </div>
-    <div id="textBox" class="collapse well" style="margin-top: 2%">
-        <form>
-            <div class="form-group">
-                <label for="heading">Note Heading: </label>
-                <input class="form-control" id="heading" maxlength="40ch" >
+    <div class="container-fluid" style="text-align: center">
+        <div class="btn-group">
+            <button type="button" class="btn btn-warning btn-lg" disabled>
+                Add Note
+                <span class="glyphicon glyphicon-file" style="margin-left: 0.4em"></span>
+            </button>
+            <button type="button" class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#textBox">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+        <div id="textBox" class="collapse well" style="margin-top: 2%">
+            <form>
+                <div class="form-group">
+                    <label for="heading">Note Heading: </label>
+                    <input class="form-control" id="heading" maxlength="40ch" >
+                </div>
+                <div class="form-group">
+                    <label for="content">Enter the content of your note:</label>
+                    <textarea class="form-control" rows="5" id="content"></textarea>
+                </div>
+            </form>
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#textBox"
+                        onclick="fillNote();">
+                        Submit
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#textBox"
+                        onclick="clearNote();">
+                        Clear
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="content">Enter the content of your note:</label>
-                <textarea class="form-control" rows="5" id="content"></textarea>
-            </div>
-        </form>
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#textBox"
-                    onclick="fillNote();">
-                    Submit
-                    <span class="glyphicon glyphicon-ok"></span>
-                </button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#textBox"
-                    onclick="clearNote();">
-                    Clear
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
+        </div>
+        <div class="container well" style="margin-top: 2%">
+            <div class="panel-group" id="accordion">
             </div>
         </div>
     </div>
-    <div class="container well" style="margin-top: 2%">
-        <div class="panel-group" id="accordion">
+    <div id="modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete ???</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this note ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="deleteNote()">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+
 
 </body>
 </html>
@@ -74,88 +95,118 @@
 <script>
     var heading;
     var content;
+    var headingElement = document.getElementById('heading');
+    var contentElement = document.getElementById('content');
+    var deleteID;
+    var isEditting = false;
 
     function fillNote() {
-        var headingElement = document.getElementById('heading');
         heading = headingElement.value;
-        var contentElement = document.getElementById('content');
+        var fixedHeading = fixHeading();
         content = contentElement.value;
+        if (heading === "" && content === "") return;
         var accordionElement = document.getElementById('accordion');
         var newElement = document.createElement('div');
+        accordionElement.insertBefore(newElement, accordionElement.childNodes[0]);
         newElement.classList.add('panel', 'panel-default');
+        newElement.setAttribute('id', fixedHeading + "Element");
         var newElementHeading = document.createElement('div');
+        newElement.appendChild(newElementHeading);
         newElementHeading.classList.add('panel-heading');
         var h4 = document.createElement('h4');
-        h4.classList.add('panel-title');
-
-        var deleteButton = document.createElement('button');
-        deleteButton.classList.add('btn', 'btn-danger', 'btn-xs');
-        deleteButton.style.float = 'left';
-        var spanTrashGlyph = document.createElement('span');
-        spanTrashGlyph.classList.add('glyphicon', 'glyphicon-trash');
-        deleteButton.appendChild(spanTrashGlyph);
-        deleteButton.addEventListener('click', deleteNote(accordionElement.children.length));
-        h4.appendChild(deleteButton);
-
-        var a = document.createElement('a');
-        a.setAttribute('data-toggle', 'collapse');
-        a.setAttribute('data-parent', '#accordion');
-        a.setAttribute('href', '#' + heading);
-        a.textContent = heading;
-        h4.appendChild(a);
-
-        var editButton = document.createElement('button');
-        editButton.classList.add('btn', 'btn-info', 'btn-xs');
-        editButton.style.float = 'right';
-        var spanEditGlyph = document.createElement('span');
-        spanEditGlyph.classList.add('glyphicon', 'glyphicon-pencil');
-        editButton.appendChild(spanEditGlyph);
-        editButton.addEventListener('click', editNote());
-        h4.appendChild(editButton);
 
         newElementHeading.appendChild(h4);
-        newElement.appendChild(newElementHeading);
+        h4.classList.add('panel-title');
+        h4.style.textAlign = 'left';
+
+        var a = document.createElement('a');
+        h4.appendChild(a);
+        a.setAttribute('data-toggle', 'collapse');
+        a.setAttribute('data-parent', '#accordion');
+        a.setAttribute('href', "#" + fixedHeading + "Content");
+
+        a.setAttribute('id', fixedHeading + "Heading");
+        a.textContent = heading;
+//    <div class="btn-group btn-group-xs" style="float: right">
+        var btnGroup = document.createElement('div');
+        h4.appendChild(btnGroup);
+        btnGroup.classList.add('btn-group', 'btn-group-xs');
+        btnGroup.style.float = 'right';
+
+        var deleteButton = document.createElement('button');
+        btnGroup.appendChild(deleteButton);
+        deleteButton.classList.add('btn', 'btn-danger');
+        var spanTrashGlyph = document.createElement('span');
+        deleteButton.appendChild(spanTrashGlyph);
+        deleteButton.style.width = '10vh';
+        spanTrashGlyph.classList.add('glyphicon', 'glyphicon-trash');
+
+
+        deleteButton.addEventListener('click', function () {
+            deleteID = newElement.id;
+            deleteButton.setAttribute('data-toggle', 'modal');
+            deleteButton.setAttribute('data-target', '#modal');
+        });
+
+        var editButton = document.createElement('button');
+        btnGroup.appendChild(editButton);
+        editButton.classList.add('btn', 'btn-info');
+        var spanEditGlyph = document.createElement('span');
+        editButton.appendChild(spanEditGlyph);
+        editButton.style.width = '10vh';
+        spanEditGlyph.classList.add('glyphicon', 'glyphicon-pencil');
+
         var newElementContent = document.createElement('div');
-        newElementContent.setAttribute('id', heading);
+        newElement.appendChild(newElementContent);
+        newElementContent.setAttribute('id', fixedHeading + "Content");
         newElementContent.classList.add('panel-collapse', 'collapse');
         var elemBody = document.createElement('div');
+        newElementContent.appendChild(elemBody);
         elemBody.classList.add('panel-body');
         elemBody.textContent = content;
-        newElementContent.appendChild(elemBody);
-        newElement.appendChild(newElementContent);
-        accordionElement.appendChild(newElement);
+
+        editButton.addEventListener('click', function () {
+            $('#textBox').collapse("show");
+            headingElement.value = a.textContent;
+            contentElement.value = elemBody.textContent;
+            isEditting = true;
+            deleteID = newElement.id;
+            deleteNote();
+        });
         clearNote();
     }
 
-    function deleteNote(i) {
-        var accordionElement = document.getElementById('accordion');
-//        var child = accordionElement.children[i];
-//        accordionElement.removeChild(child);
-    }
-    
-    function editNote() {
-
+    function deleteNote() {
+        var accordion=document.getElementById("accordion");
+        var el = document.getElementById(deleteID);
+        accordion.removeChild(el);
     }
 
     function clearNote() {
-        var headingElement = document.getElementById('heading');
         headingElement.value = "";
-        var contentElement = document.getElementById('content');
         contentElement.value = "";
+    }
+
+    function fixHeading() {
+        var result = heading.replace(/ /g,"_");
+        return result;
     }
 </script>
 
 <!--<div class="panel panel-default">-->
-<!--<div class="panel-heading">-->
-<!--<h4 class="panel-title">-->
-<!--<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>-->
-<!--<button class="btn btn-danger btn-xs" style="float: left;"><span class="glyphicon glyphicon-trash"></span></button>-->
-<!--<button class="btn btn-info btn-xs" style="float: right;"><span class="glyphicon glyphicon-pencil"></span></button>-->
-<!--</h4>-->
-<!--</div>-->
-<!--<div id="collapse1" class="panel-collapse collapse">-->
-<!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
-<!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
-<!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>-->
-<!--</div>-->
+    <!--<div class="panel-heading">-->
+        <!--<h4 class="panel-title" style="text-align: left">-->
+            <!--<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>-->
+            <!--<div class="btn-group btn-group-xs" style="float: right">-->
+                <!--<button class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>-->
+                <!--<button class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></button>-->
+            <!--</div>-->
+        <!--</h4>-->
+    <!--</div>-->
+    <!--<div id="collapse1" class="panel-collapse collapse">-->
+        <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
+            <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+            <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+        <!--</div>-->
+    <!--</div>-->
 <!--</div>-->

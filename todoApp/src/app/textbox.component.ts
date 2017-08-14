@@ -6,11 +6,11 @@ import {AccordionComponent} from './accordion.component';
   template: `<form>
       <div class="form-group">
         <label for="heading">Note Heading: </label>
-        <input class="form-control" id="heading" maxlength="40ch" [(ngModel)]="heading" [ngModelOptions]="{standalone: true}"/>
+        <input class="form-control" id="heading" maxlength="40ch" [(ngModel)]=heading [ngModelOptions]="{standalone: true}"/>
       </div>
       <div class="form-group">
         <label for="content">Enter the content of your note:</label>
-        <textarea class="form-control" rows="5" id="content" [(ngModel)]="content" [ngModelOptions]="{standalone: true}">
+        <textarea class="form-control" rows="5" id="content" [(ngModel)]=content [ngModelOptions]="{standalone: true}">
         </textarea>
       </div>
     </form>
@@ -35,11 +35,12 @@ import {AccordionComponent} from './accordion.component';
 export class TextboxComponent {
   public heading: string;
   public content: string;
-  constructor (private accordionComponent: AccordionComponent) {
+  constructor (public accordionComponent: AccordionComponent) {
     this.heading = '';
     this.content = '';
   }
   callFillNote() {
+    debugger;
     if (this.heading === '' && this.content === '') {
       return;
     }

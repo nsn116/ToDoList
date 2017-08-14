@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NoteComponent} from './note.component';
+import {NoteOutlineComponent} from './noteOutline.component';
 import {Globals} from './global';
 
 @Component({
@@ -15,17 +15,15 @@ import {Globals} from './global';
           <p>Are you sure you want to delete this note ?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal" (click)="globals.toDelete=true">Yes</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="globals.toDelete=false">No</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" (click)="globals.clearNote()">Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
         </div>
       </div>
     </div>
   </div>`,
-  providers: [NoteComponent]
+  providers: [NoteOutlineComponent]
 })
 export class ModalComponent {
-  // constructor(public noteComponent: NoteComponent) {
-  // }
   constructor(public globals: Globals) {
   }
 }

@@ -8,13 +8,13 @@ import {NavbarComponent} from './navbar.component';
 import {AddNoteComponent} from './addNote.component';
 import {TextboxComponent} from './textbox.component';
 import {AccordionComponent} from './accordion.component';
-import {NoteComponent} from './note.component';
+import {NoteOutlineComponent} from './noteOutline.component';
 import {Globals} from './global';
 import {ModalComponent} from './modal.component';
 
 @NgModule({
   declarations: [
-    AppComponent, NavbarComponent, AddNoteComponent, TextboxComponent, AccordionComponent, NoteComponent, ModalComponent
+    AppComponent, NavbarComponent, AddNoteComponent, TextboxComponent, AccordionComponent, NoteOutlineComponent, ModalComponent
   ],
   imports: [
     AlertModule.forRoot(),

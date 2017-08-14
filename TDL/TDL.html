@@ -98,8 +98,7 @@
     var headingElement = document.getElementById('heading');
     var contentElement = document.getElementById('content');
     var deleteID;
-    var isEditting = false;
-
+g
     function fillNote() {
         heading = headingElement.value;
         var fixedHeading = fixHeading();
@@ -169,7 +168,6 @@
             $('#textBox').collapse("show");
             headingElement.value = a.textContent;
             contentElement.value = elemBody.textContent;
-            isEditting = true;
             deleteID = newElement.id;
             deleteNote();
         });

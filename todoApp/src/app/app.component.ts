@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {AccordionComponent} from './accordion.component';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import { Component } from '@angular/core';
         </app-accordion>
     </div>
     <app-modal></app-modal>
-  </div>`
+  </div>`,
+  providers: [AccordionComponent]
 })
 export class AppComponent {
 }

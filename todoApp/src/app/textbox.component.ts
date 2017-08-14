@@ -6,11 +6,11 @@ import {AccordionComponent} from './accordion.component';
   template: `<form>
       <div class="form-group">
         <label for="heading">Note Heading: </label>
-        <input class="form-control" id="heading" maxlength="40ch" [(ngModel)]=heading [ngModelOptions]="{standalone: true}"/>
+        <input class="form-control" id="heading" maxlength="40ch" [(ngModel)]="heading" [ngModelOptions]="{standalone: true}"/>
       </div>
       <div class="form-group">
         <label for="content">Enter the content of your note:</label>
-        <textarea class="form-control" rows="5" id="content" [(ngModel)]=content [ngModelOptions]="{standalone: true}">
+        <textarea class="form-control" rows="5" id="content" [(ngModel)]="content" [ngModelOptions]="{standalone: true}">
         </textarea>
       </div>
     </form>
@@ -23,7 +23,7 @@ import {AccordionComponent} from './accordion.component';
         </button>
       </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#textBox"
+        <button type="button" class="btn btn-danger"
                 (click)="clearTextBox()">
           Clear
           <span class="glyphicon glyphicon-remove"></span>
@@ -41,15 +41,14 @@ export class TextboxComponent {
   }
   callFillNote() {
     debugger;
-    if (this.heading === '' && this.content === '') {
+    if (this.heading === '' || this.content === '') {
       return;
+    } else {
+      this.accordionComponent.fillNote(this.heading, this.content);
     }
-    this.accordionComponent.fillNote(this.heading, this.content);
-    this.clearTextBox();
   }
   clearTextBox() {
     this.heading = '';
     this.content = '';
-    document.getElementById('closeBox').click();
   }
 }

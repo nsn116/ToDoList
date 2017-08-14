@@ -3,9 +3,7 @@ import {Globals} from './global';
 
 @Component({
   selector: 'app-note-outline',
-  template: `<!--<div class="panel panel-default" [attr.id]="fixHeading(heading) + 'Element'">-->
-      <!--<div class="panel-heading">-->
-        <h4 class="panel-title" style="text-align: left;">
+  template: `<h4 class="panel-title" style="text-align: left;">
           <a [attr.data-toggle]="'collapse'" [attr.data-parent]="'#accordion'" [attr.href]="'#' + globals.fixHeading(heading) + 'Content'"
              [attr.id]="globals.fixHeading(heading) + 'Heading'">
             {{heading}}
@@ -36,4 +34,3 @@ export class NoteOutlineComponent {
     this.globals.clearNote();
   }
 }
-// TODO: Edit Note
